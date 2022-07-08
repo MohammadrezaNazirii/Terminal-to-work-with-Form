@@ -6,6 +6,7 @@
 int main() {
     system("cls");
     while (1){
+        printf("\n");
         print_main_menu();
         char c = getchar();
         emptyBuffer();
