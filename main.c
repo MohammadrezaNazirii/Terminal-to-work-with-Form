@@ -73,6 +73,10 @@ int main() {
                         if(c == '1'){
                             get_data_from_user(1, &xx, &yy, &width, &height, label);
                             len = strlen(label);
+                            if(check_inputs(x, y, xx, yy, len, width, height, 1)){
+                                out_of_range_input();
+                                continue;
+                            }
                             if(check_validity(xx, yy, width, height, len, 1))
                                 print_textbox(xx, yy, width, height, label);
                             else
@@ -80,6 +84,10 @@ int main() {
                         }else if(c == '2'){
                             get_data_from_user(0, &xx, &yy, &width, &height, label);
                             len = strlen(label);
+                            if(check_inputs(x, y, xx, yy, len, 0, 0, 0)){
+                                out_of_range_input();
+                                continue;
+                            }
                             if(check_validity(xx, yy, width, height, len, 0))
                                 print_label(xx, yy, label);
                             else
@@ -87,10 +95,18 @@ int main() {
                         }else if(c == '3'){
                             printf("Please enter 4 numbers separated by spaces; First & Second, for x and y (start of TextBox you want to remove) and Third & Fourth, for width and height of TextBox: ");
                             scanf("%d %d %d %d", &xx, &yy, &width, &height);
+                            if(check_inputs(x, y, xx, yy, 0, width, height, 1)){
+                                out_of_range_input();
+                                continue;
+                            }
                             remove_textbox(xx, yy, width, height);
                         }else if(c == '4'){
                             printf("Please enter 3 numbers separated by spaces; First and Second, for x and y (start of Label you want to remove) and Third, for length of Label: ");
                             scanf("%d %d %d", &xx, &yy, &len);
+                            if(check_inputs(x, y, xx, yy, len, 0, 0, 0)){
+                                out_of_range_input();
+                                continue;
+                            }
                             remove_label(xx, yy, len);
                         }else if(c == '5'){
                             break;

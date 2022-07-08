@@ -178,3 +178,19 @@ void remove_textbox(int x, int y, int w, int h){
             lines[i][j] = ' ';
     }
 }
+
+int check_inputs(int x, int y, int xx, int yy, int len, int w, int h, int mode){
+    if(mode == 1) {
+        if ((xx > 0) && (yy > 1) && ((xx + len + w + 2) < x) && ((yy + h + 1) < y))
+            return 0;
+    }else{
+        if ((xx > 0) && (yy > 0) && ((xx + len) < x) && (yy < y))
+            return 0;
+    }
+    return 1;
+}
+
+void out_of_range_input(){
+    printf("Inputs Out Of Range!!!\n");
+    Sleep(1500);
+}
