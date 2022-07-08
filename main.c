@@ -85,9 +85,13 @@ int main() {
                             else
                                 write_error();
                         }else if(c == '3'){
-
+                            printf("Please enter 4 numbers separated by spaces; First & Second, for x and y (start of TextBox you want to remove) and Third & Fourth, for width and height of TextBox: ");
+                            scanf("%d %d %d %d", &xx, &yy, &width, &height);
+                            remove_textbox(xx, yy, width, height);
                         }else if(c == '4'){
-
+                            printf("Please enter 3 numbers separated by spaces; First and Second, for x and y (start of Label you want to remove) and Third, for length of Label: ");
+                            scanf("%d %d %d", &xx, &yy, &len);
+                            remove_label(xx, yy, len);
                         }else if(c == '5'){
                             break;
                         }else{

@@ -166,3 +166,15 @@ void write_error(){
     printf("Error: Your request cannot be fulfilled, because this place is already occupied.\nPlease try again\n");
     Sleep(1500);
 }
+
+void remove_label(int x, int y, int len){
+    for(int i=0;i<len;i++)
+        lines[y][x+i] = ' ';
+}
+
+void remove_textbox(int x, int y, int w, int h){
+    for(int i=y;i<y+h+2;i++){
+        for(int j=x;j<x+w+2;j++)
+            lines[i][j] = ' ';
+    }
+}
