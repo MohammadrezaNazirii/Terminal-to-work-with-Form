@@ -6,12 +6,29 @@
 int main() {
     system("cls");
     while (1){
-        printf("\n");
         print_main_menu();
         char c = getchar();
         emptyBuffer();
         if(c == '1'){
+            while(1){
+                system("cls");
+                print_design_menu();
+                c = getchar();
+                emptyBuffer();
+                if (c == '1' || c == '2') {
+                    if (c == '1'){//New
 
+                    }else{//Edit
+
+                    }
+                }
+                else if (c == '3') {
+                    system("cls");
+                    break;
+                } else {
+                    invalid_input();
+                }
+            }
         }
         else if(c == '2'){
 

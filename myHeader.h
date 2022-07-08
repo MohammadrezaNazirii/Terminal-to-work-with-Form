@@ -17,3 +17,8 @@ void invalid_input(){
     printf("Invalid Input!!!\n");
     Sleep(1500);
 }
+
+void print_design_menu(){
+    printf("1.New\n2.Edit\n3.Back/Exit\n");
+    printf("What do you want to do? ");
+}
