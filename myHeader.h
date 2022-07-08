@@ -76,3 +76,93 @@ void save_file(char* name, int x, int y){
         fprintf(f, "%s", lines[i]);
     fclose(f);
 }
+
+void read_file(char* name, int* x, int* y){
+    FILE* f = fopen(name, "r");
+    fscanf(f, "%d  %d\n", x, y);
+    allocate_lines(*x, *y);
+    for(int i=0;i<*y;i++)
+        fgets(lines[i], *x+2, f);
+    fclose(f);
+}
+
+void print_lines(int y, char* name){
+    printf("Form : %s\n", name);
+    for(int i=0;i<y;i++){
+        for(int j=0;lines[i][j] != '\0';j++){
+            if(lines[i][j] == '~')
+                putchar(' ');
+            else
+                putchar(lines[i][j]);
+        }
+    }
+}
+
+void print_designNew_menu(){
+    printf("1.Create TextBox(each TextBox should have Label)        2.Create Label        3.Remove TextBox        4.Remove Label        5.Back/Exit\n");
+    printf("What do you want to do? ");
+}
+
+void get_data_from_user(int mode, int* xx, int* yy, int* w, int* h, char l[]){
+    if (mode == 1)
+        printf("Enter a Label for TextBox: ");
+    else if (mode == 0)
+        printf("Enter Label: ");
+    gets(l);
+    printf("Enter the coordinates(first x and then y): ");
+    scanf("%d %d", xx, yy);
+    emptyBuffer();
+    if (mode == 1){
+        printf("Enter width and height of TextBox separated by space: ");
+        scanf("%d %d", w, h);
+        emptyBuffer();
+    }
+}
+
+int print_label(int x, int y, const char label[]){
+    int i=0;
+    for(;label[i] != '\0';i++){
+        lines[y][x+i] = label[i];
+    }
+    return x+i;
+}
+
+void print_textbox(int x, int y, int w, int h, const char label[]){
+    int newX = print_label(x, y, label);
+//    lines[y][newX] = ':';
+    for(int i=newX;i<newX+w+2;i++){
+        lines[y-1][i] = '-';
+    }
+    for(int j=0;j<h;j++){
+        for (int i = newX; i < newX + w + 2; i++) {
+            if(i == newX || i == newX+w+1){
+                lines[y+j][i] = '|';
+            }else
+                lines[y+j][i] = '~';
+        }
+    }
+    for(int i=newX;i<newX+w+2;i++){
+        lines[y+h][i] = '-';
+    }
+}
+
+int check_validity(int x, int y, int w, int h, int len, int mode){
+    for(int i=x;i<x+len;i++){
+        if(lines[y][i] != ' ')
+            return 0;
+    }
+    if(mode == 1){
+        for(int i=-1;i<h+1;i++){
+            for(int j=x+len;j<x+len+w+2;j++){
+                if(lines[y+i][j] != ' ')
+                    return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+void write_error(){
+    printf("Error: Your request cannot be fulfilled, because this place is already occupied.\nPlease try again\n");
+    Sleep(1500);
+}

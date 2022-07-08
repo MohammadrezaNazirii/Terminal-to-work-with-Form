@@ -61,8 +61,40 @@ int main() {
                             }
                         }
                     }
+                    while (1){
+                        read_file(name, &x, &y);
+                        system("cls");
+                        print_lines(y, name_for_print);
+                        print_designNew_menu();
+                        c = getchar();
+                        emptyBuffer();
+                        char label[100];
+                        int xx, yy, width, height, len;
+                        if(c == '1'){
+                            get_data_from_user(1, &xx, &yy, &width, &height, label);
+                            len = strlen(label);
+                            if(check_validity(xx, yy, width, height, len, 1))
+                                print_textbox(xx, yy, width, height, label);
+                            else
+                                write_error();
+                        }else if(c == '2'){
+                            get_data_from_user(0, &xx, &yy, &width, &height, label);
+                            len = strlen(label);
+                            if(check_validity(xx, yy, width, height, len, 0))
+                                print_label(xx, yy, label);
+                            else
+                                write_error();
+                        }else if(c == '3'){
 
+                        }else if(c == '4'){
 
+                        }else if(c == '5'){
+                            break;
+                        }else{
+                            invalid_input();
+                        }
+                        save_file(name, x, y);
+                    }
                 }
                 else if (c == '3') {
                     system("cls");
