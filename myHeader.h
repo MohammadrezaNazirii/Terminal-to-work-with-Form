@@ -80,6 +80,11 @@ void initialize_lines(int x, int y){
     }
 }
 
+void print_fileNotFound_error(){
+    printf("Can't find form with this name.\nTry again!");
+    Sleep(2500);
+}
+
 void save_file(char* name, int x, int y, int mode){
     FILE* f;
     f = fopen(name, "r+");
@@ -126,7 +131,7 @@ void print_lines(int y, char* name){
 }
 
 void print_designNew_menu(){
-    printf("1.Create TextBox(each TextBox should have Label)        2.Create Label        3.Remove TextBox        4.Remove Label        5.Back/Exit\n");
+    printf("1.Create TextBox(each TextBox should have Label)        2.Create Label        3.Remove Label        4.Back/Exit\n");
     printf("What do you want to do? ");
 }
 
@@ -160,7 +165,6 @@ int print_label(int x, int y, const char l[]){
 
 void print_textbox(int x, int y, int w, int h, const char l[]){
     int newX = print_label(x, y, l);
-//    lines[y][newX] = ':';
     for(int i=newX;i<newX+w+2;i++){
         if (i == newX || i == newX+w+1)
             lines[y-1][i] = 'x';
@@ -244,4 +248,29 @@ void out_of_range_input(){
 void find_start_of_textbox(label* label, int* x, int* y){
     *x = (label->x) + (int)strlen(label->str);
     *y = (label->y) - 1;
+}
+
+void print_removeLabel_menu(char* selected_label){
+    printf("WARNING: If the selected label has a textbox, its textbox will also be deleted.\n");
+    printf("Enter the label you want to delete... ");
+    gets(selected_label);
+}
+
+int find_label(char* label){
+    for(int i=0;i<nLabels;i++){
+        if(!strcmp(label, labels[i].str))
+            return i;
+    }
+    return -1;
+}
+
+void print_labelNotFound_error(){
+    printf("Label not found!\n");
+    Sleep(1500);
+}
+
+void remove_label_from_struct(int index){
+    nLabels--;
+    for(int i=index;i<nLabels-1;i++)
+        labels[i] = labels[i+1];
 }

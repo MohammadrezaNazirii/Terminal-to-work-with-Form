@@ -17,7 +17,7 @@ int main() {
                 c = getchar();
                 emptyBuffer();
                 if (c == '1' || c == '2') {
-                    int x, y, flag_new;
+                    int x, y, flag_new, index;
                     char name[100], name_for_print[100];
                     if (c == '1'){//New
                         system("cls");
@@ -55,15 +55,10 @@ int main() {
                             strcpy(name_for_print, name);
                             emptyBuffer();
                             strcat(name, ".txt");
-                            if(exist_file(name)) {
-//                                nLabels = 0;
-//                                read_from_ds(name_for_ds);
+                            if(exist_file(name))
                                 break;
-                            }
-                            else {
-                                printf("Can't find form with this name.\nTry again!");
-                                Sleep(2500);
-                            }
+                            else
+                                print_fileNotFound_error();
                         }
                     }
                     while (1){
@@ -73,13 +68,10 @@ int main() {
                             read_file(name, &x, &y, 1);
                         system("cls");
                         print_lines(y, name_for_print);
-//                        for(int k=0;k<nLabels;k++){
-//                            printf("%d %d %s %d %s %d\n", labels[k].x, labels[k].y, labels[k].str, labels[k].have_textbox, labels[k].str_textbox, nLabels);
-//                        }
                         print_designNew_menu();
                         c = getchar();
                         emptyBuffer();
-                        char label[100];
+                        char label[100], selected_label[100];
                         int xx, yy, width, height, len;
                         if(c == '1'){
                             get_data_from_user(1, &xx, &yy, &width, &height, label);
@@ -108,25 +100,20 @@ int main() {
                             else
                                 write_error();
                         }else if(c == '3'){
-                            printf("Please enter 2 numbers separated by spaces; For x and y (start of TextBox you want to remove) : ");
-                            scanf("%d %d", &xx, &yy);
-                            emptyBuffer();
-                            find_textbox_dimensions(xx, yy, &width, &height);
-                            if(check_inputs(x, y, xx, yy, 0, width, height, 1)){
-                                out_of_range_input();
-                                continue;
-                            }
-                            remove_textbox(xx, yy, width, height);
-                        }else if(c == '4'){
-                            printf("Please enter 3 numbers separated by spaces; First and Second, for x and y (start of Label you want to remove) and Third, for length of Label: ");
-                            scanf("%d %d %d", &xx, &yy, &len);
-                            emptyBuffer();
-                            if(check_inputs(x, y, xx, yy, len, 0, 0, 0)){
-                                out_of_range_input();
-                                continue;
-                            }
-                            remove_label(xx, yy, len);
-                        }else if(c == '5'){
+                            print_removeLabel_menu(selected_label);
+                            index = find_label(selected_label);
+                            if(index >= 0){
+                                if(labels[index].have_textbox) {
+                                    find_start_of_textbox(&labels[index], &xx, &yy);
+                                    find_textbox_dimensions(xx, yy, &width, &height);
+                                    remove_textbox(xx, yy, width, height);
+                                }
+                                remove_label(labels[index].x, labels[index].y, strlen(labels[index].str));
+                                remove_label_from_struct(index);
+                            }else
+                                print_labelNotFound_error();
+                        }
+                        else if(c == '4'){
                             break;
                         }else{
                             invalid_input();
