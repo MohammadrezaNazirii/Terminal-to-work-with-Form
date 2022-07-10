@@ -42,3 +42,14 @@ void print_menu(){
     printf("or you can enter 0 in every steps for back to previous step.\n");
     printf("Note: When you are on a component, if enter something, it will go to its TextBox.\n");
 }
+
+void fill_textbox(int xx, int yy, int w, int h, const char str[]){
+    int n=0;
+    for(int i=yy+1;i<yy+h+1;i++){
+        for(int j=xx+1;j<xx+w+1;j++){
+            if(str[n] == '\0')
+                return;
+            lines[i][j] = str[n++];
+        }
+    }
+}

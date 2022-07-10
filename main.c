@@ -150,12 +150,12 @@ int main() {
             int i=0;
             while (1){
                 if(labels[i].have_textbox){
+//                    emptyBuffer();
                     system("cls");
                     print_lines(y, name_for_print);
                     print_buttons();
                     print_menu();
                     printf("'-':previous  '+':next  '1'to'4':buttons  string:Fill TextBox  '0':back\n");
-                    //print label
                     printf("Label: %s\n", labels[i].str);
                     c = getchar();
                     if (c == '-') {
@@ -178,6 +178,12 @@ int main() {
                         break;
                     } else if (c == '1') {
                         emptyBuffer();
+                        system("cls");
+                        print_lines(y, name_for_print);
+                        print_ADD();
+                        char completed_name[20];
+                        scanf("%s", completed_name);
+                        save_file(completed_name, x, y, 0);
                     } else if (c == '2') {
                         emptyBuffer();
                     } else if (c == '3') {
@@ -185,8 +191,8 @@ int main() {
                     } else if (c == '4') {
                         emptyBuffer();
                     } else if (c != ' ') {//matne TextBox ro migire.
+                        textbox_str[0] = '\0';
                         gets(temp);
-                        emptyBuffer();
                         strncat(textbox_str, &c, 1);
                         strcat(textbox_str, temp);
                         find_start_of_textbox(&labels[i], &xx, &yy);
@@ -199,6 +205,7 @@ int main() {
                             Sleep(1500);
                         }else{
                             strcpy(labels[i].str_textbox, textbox_str);
+                            fill_textbox(xx, yy, width, height, textbox_str);
                         }
                     }
                 }else {
