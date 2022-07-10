@@ -17,10 +17,11 @@ int main() {
                 c = getchar();
                 emptyBuffer();
                 if (c == '1' || c == '2') {
-                    int x, y;
+                    int x, y, flag_new;
                     char name[100], name_for_print[100];
                     if (c == '1'){//New
                         system("cls");
+                        flag_new = 1;
                         while (1) {
                             system("cls");
                             printf("Please enter a name for your form... ");
@@ -43,9 +44,10 @@ int main() {
                         emptyBuffer();
                         allocate_lines(x, y);
                         initialize_lines(x, y);
-                        save_file(name, x, y);
+                        save_file(name, x, y, 1);
                     }else{//Edit
                         system("cls");
+                        flag_new = 0;
                         while(1){
                             system("cls");
                             printf("Please enter the name of your form... ");
@@ -53,8 +55,11 @@ int main() {
                             strcpy(name_for_print, name);
                             emptyBuffer();
                             strcat(name, ".txt");
-                            if(exist_file(name))
+                            if(exist_file(name)) {
+//                                nLabels = 0;
+//                                read_from_ds(name_for_ds);
                                 break;
+                            }
                             else {
                                 printf("Can't find form with this name.\nTry again!");
                                 Sleep(2500);
@@ -62,9 +67,15 @@ int main() {
                         }
                     }
                     while (1){
-                        read_file(name, &x, &y);
+                        if(flag_new)
+                            read_file(name, &x, &y, 0);
+                        else
+                            read_file(name, &x, &y, 1);
                         system("cls");
                         print_lines(y, name_for_print);
+//                        for(int k=0;k<nLabels;k++){
+//                            printf("%d %d %s %d %s %d\n", labels[k].x, labels[k].y, labels[k].str, labels[k].have_textbox, labels[k].str_textbox, nLabels);
+//                        }
                         print_designNew_menu();
                         c = getchar();
                         emptyBuffer();
@@ -77,8 +88,10 @@ int main() {
                                 out_of_range_input();
                                 continue;
                             }
-                            if(check_validity(xx, yy, width, height, len, 1))
+                            if(check_validity(xx, yy, width, height, len, 1)) {
+                                labels[nLabels++].have_textbox = 1;
                                 print_textbox(xx, yy, width, height, label);
+                            }
                             else
                                 write_error();
                         }else if(c == '2'){
@@ -88,8 +101,10 @@ int main() {
                                 out_of_range_input();
                                 continue;
                             }
-                            if(check_validity(xx, yy, width, height, len, 0))
+                            if(check_validity(xx, yy, width, height, len, 0)) {
+                                labels[nLabels++].have_textbox = 0;
                                 print_label(xx, yy, label);
+                            }
                             else
                                 write_error();
                         }else if(c == '3'){
@@ -116,7 +131,7 @@ int main() {
                         }else{
                             invalid_input();
                         }
-                        save_file(name, x, y);
+                        save_file(name, x, y, 0);
                     }
                 }
                 else if (c == '3') {

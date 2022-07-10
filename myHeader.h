@@ -5,7 +5,7 @@ typedef struct {
     int y;
     char str[100];
     int have_textbox;
-    char str_textbox[500];
+    char str_textbox[100];
 }label;
 
 label labels[100];
@@ -80,20 +80,36 @@ void initialize_lines(int x, int y){
     }
 }
 
-void save_file(char* name, int x, int y){
-    FILE* f = fopen(name, "w");
+void save_file(char* name, int x, int y, int mode){
+    FILE* f;
+    f = fopen(name, "r+");
+    if (f == NULL || mode == 1) {
+        fclose(f);
+        f = fopen(name, "w");
+    }
     fprintf(f, "%d  %d\n", x, y);
     for(int i=0;i<y;i++)
         fprintf(f, "%s", lines[i]);
+    if (mode == 0){
+        fprintf(f, "\n%d\n", nLabels);
+        for(int i=0;i<nLabels;i++)
+            fprintf(f, "%d %d %s %d %s\n", labels[i].x, labels[i].y, labels[i].str, labels[i].have_textbox, labels[i].str_textbox);
+    }
     fclose(f);
 }
 
-void read_file(char* name, int* x, int* y){
+void read_file(char* name, int* x, int* y, int mode){
     FILE* f = fopen(name, "r");
     fscanf(f, "%d  %d\n", x, y);
     allocate_lines(*x, *y);
     for(int i=0;i<*y;i++)
         fgets(lines[i], *x+2, f);
+    if(mode == 1){
+        fscanf(f, "%d", &nLabels);
+        for(int i=0;i<nLabels;i++){
+            fscanf(f, "%d %d %s %d %s", &labels[i].x, &labels[i].y, labels[i].str, &labels[i].have_textbox, labels[i].str_textbox);
+        }
+    }
     fclose(f);
 }
 
@@ -130,16 +146,20 @@ void get_data_from_user(int mode, int* xx, int* yy, int* w, int* h, char l[]){
     }
 }
 
-int print_label(int x, int y, const char label[]){
+int print_label(int x, int y, const char l[]){
+    labels[nLabels-1].x = x;
+    labels[nLabels-1].y = y;
+    strcpy(labels[nLabels-1].str, l);
+    strcpy(labels[nLabels-1].str_textbox, ".");
     int i=0;
-    for(;label[i] != '\0';i++){
-        lines[y][x+i] = label[i];
+    for(;l[i] != '\0';i++){
+        lines[y][x+i] = l[i];
     }
     return x+i;
 }
 
-void print_textbox(int x, int y, int w, int h, const char label[]){
-    int newX = print_label(x, y, label);
+void print_textbox(int x, int y, int w, int h, const char l[]){
+    int newX = print_label(x, y, l);
 //    lines[y][newX] = ':';
     for(int i=newX;i<newX+w+2;i++){
         if (i == newX || i == newX+w+1)
@@ -219,4 +239,9 @@ int check_inputs(int x, int y, int xx, int yy, int len, int w, int h, int mode){
 void out_of_range_input(){
     printf("Inputs Out Of Range!!!\n");
     Sleep(1500);
+}
+
+void find_start_of_textbox(label* label, int* x, int* y){
+    *x = (label->x) + (int)strlen(label->str);
+    *y = (label->y) - 1;
 }
