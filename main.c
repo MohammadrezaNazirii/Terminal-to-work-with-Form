@@ -131,7 +131,7 @@ int main() {
             }
         }
         else if(c == '2'){
-            int x, y, xx, yy, width, height;
+            int x, y, xx, yy, width, height, flag_pos, flag_neg;
             char name[100], name_for_print[100], textbox_str[100], temp[100];
             textbox_str[0] = '\0';
             while(1){
@@ -147,49 +147,72 @@ int main() {
                     print_fileNotFound_error();
             }
             read_file(name, &x, &y, 1);
-            print_lines(y, name_for_print);
-            print_buttons();
-            print_menu();
             int i=0;
             while (1){
                 if(labels[i].have_textbox){
-                    printf("'-':previous  '+':next  '1'to'5':buttons  string:Fill TextBox  '0':back\n");
+                    system("cls");
+                    print_lines(y, name_for_print);
+                    print_buttons();
+                    print_menu();
+                    printf("'-':previous  '+':next  '1'to'4':buttons  string:Fill TextBox  '0':back\n");
                     //print label
                     printf("Label: %s\n", labels[i].str);
                     c = getchar();
                     if (c == '-') {
+                        emptyBuffer();
+                        flag_pos = 0;
+                        flag_neg = 1;
                         i--;
-                        if (i == 0)
+                        if (i == -1)
                             i = nLabels - 1;
                     } else if (c == '+') {
+                        emptyBuffer();
+                        flag_pos = 1;
+                        flag_neg = 0;
                         i++;
                         if (i == nLabels)
                             i = 0;
                     } else if (c == '0') {
+                        emptyBuffer();
+                        system("cls");
                         break;
                     } else if (c == '1') {
-
+                        emptyBuffer();
                     } else if (c == '2') {
-
+                        emptyBuffer();
                     } else if (c == '3') {
-
+                        emptyBuffer();
                     } else if (c == '4') {
-
+                        emptyBuffer();
                     } else if (c != ' ') {//matne TextBox ro migire.
                         gets(temp);
+                        emptyBuffer();
                         strncat(textbox_str, &c, 1);
                         strcat(textbox_str, temp);
                         find_start_of_textbox(&labels[i], &xx, &yy);
                         find_textbox_dimensions(xx, yy, &width, &height);
-                        if(strlen(textbox_str) <= width*height){
-                            strcpy(labels[i].str_textbox, textbox_str);
-                        }else{
+                        if(strlen(textbox_str) > width*height){
                             printf("Your text is too large for this TextBox.");
                             Sleep(1500);
+                        }else if(strcmp(labels[i].str_textbox, ".")){
+                            printf("This TexBox is already filled.");
+                            Sleep(1500);
+                        }else{
+                            strcpy(labels[i].str_textbox, textbox_str);
                         }
                     }
-                }else
-                    i++;
+                }else {
+                    if(flag_pos) {
+                        i++;
+                        if (i == nLabels)
+                            i = 0;
+                    }
+                    if(flag_neg){
+                        i--;
+                        if (i == -1)
+                            i = nLabels-1;
+                    }
+                }
             }
         }
         else if(c == '3'){
