@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string.h>
 #include "myHeader.h"
+#include "third_phase.h"
 
 int main() {
     system("cls");
@@ -130,7 +131,66 @@ int main() {
             }
         }
         else if(c == '2'){
+            int x, y, xx, yy, width, height;
+            char name[100], name_for_print[100], textbox_str[100], temp[100];
+            textbox_str[0] = '\0';
+            while(1){
+                system("cls");
+                printf("Enter the name of the form you want to complete... ");
+                scanf("%s", name);
+                strcpy(name_for_print, name);
+                emptyBuffer();
+                strcat(name, ".txt");
+                if(exist_file(name))
+                    break;
+                else
+                    print_fileNotFound_error();
+            }
+            read_file(name, &x, &y, 1);
+            print_lines(y, name_for_print);
+            print_buttons();
+            print_menu();
+            int i=0;
+            while (1){
+                if(labels[i].have_textbox){
+                    printf("'-':previous  '+':next  '1'to'5':buttons  string:Fill TextBox  '0':back\n");
+                    //print label
+                    printf("Label: %s\n", labels[i].str);
+                    c = getchar();
+                    if (c == '-') {
+                        i--;
+                        if (i == 0)
+                            i = nLabels - 1;
+                    } else if (c == '+') {
+                        i++;
+                        if (i == nLabels)
+                            i = 0;
+                    } else if (c == '0') {
+                        break;
+                    } else if (c == '1') {
 
+                    } else if (c == '2') {
+
+                    } else if (c == '3') {
+
+                    } else if (c == '4') {
+
+                    } else if (c != ' ') {//matne TextBox ro migire.
+                        gets(temp);
+                        strncat(textbox_str, &c, 1);
+                        strcat(textbox_str, temp);
+                        find_start_of_textbox(&labels[i], &xx, &yy);
+                        find_textbox_dimensions(xx, yy, &width, &height);
+                        if(strlen(textbox_str) <= width*height){
+                            strcpy(labels[i].str_textbox, textbox_str);
+                        }else{
+                            printf("Your text is too large for this TextBox.");
+                            Sleep(1500);
+                        }
+                    }
+                }else
+                    i++;
+            }
         }
         else if(c == '3'){
             printf("Good Luck!");
