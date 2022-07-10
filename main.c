@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "myHeader.h"
 #include "third_phase.h"
 
@@ -181,9 +182,18 @@ int main() {
                         system("cls");
                         print_lines(y, name_for_print);
                         print_ADD();
-                        char completed_name[20];
-                        scanf("%s", completed_name);
-                        save_file(completed_name, x, y, 0);
+                        mkdir(name_for_print);
+                        char completed_name[20] = "./";
+                        make_completed_name(completed_name, name_for_print);
+                        if(!exist_file(completed_name))
+                            save_file(completed_name, x, y, 0);
+                        else{
+                            printf("You have a form with this name!\nDo you want to rewrite it?\nType 'y' if you want to rewrite it or type any character to try again.\n");
+                            c = getchar();
+                            emptyBuffer();
+                            if (c == 'y')
+                                save_file(completed_name, x, y, 0);
+                        }
                     } else if (c == '2') {
                         emptyBuffer();
                     } else if (c == '3') {

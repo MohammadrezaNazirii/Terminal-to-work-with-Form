@@ -53,3 +53,13 @@ void fill_textbox(int xx, int yy, int w, int h, const char str[]){
         }
     }
 }
+
+void make_completed_name(char* completed_name, const char* name){
+    strcat(completed_name, name);
+    strcat(completed_name, "/");
+    char temp[100];
+    scanf("%s", temp);
+    emptyBuffer();
+    strcat(completed_name, temp);
+    strcat(completed_name, ".txt");
+}
