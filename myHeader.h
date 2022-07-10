@@ -1,5 +1,16 @@
 char** lines;
 
+typedef struct {
+    int x;
+    int y;
+    char str[100];
+    int have_textbox;
+    char str_textbox[500];
+}label;
+
+label labels[100];
+int nLabels=0;
+
 void emptyBuffer(){
     char c;
     while (1){
@@ -131,7 +142,10 @@ void print_textbox(int x, int y, int w, int h, const char label[]){
     int newX = print_label(x, y, label);
 //    lines[y][newX] = ':';
     for(int i=newX;i<newX+w+2;i++){
-        lines[y-1][i] = '-';
+        if (i == newX || i == newX+w+1)
+            lines[y-1][i] = 'x';
+        else
+            lines[y-1][i] = '-';
     }
     for(int j=0;j<h;j++){
         for (int i = newX; i < newX + w + 2; i++) {
@@ -142,7 +156,10 @@ void print_textbox(int x, int y, int w, int h, const char label[]){
         }
     }
     for(int i=newX;i<newX+w+2;i++){
-        lines[y+h][i] = '-';
+        if (i == newX || i == newX+w+1)
+            lines[y+h][i] = 'x';
+        else
+            lines[y+h][i] = '-';
     }
 }
 
@@ -167,6 +184,15 @@ void write_error(){
     Sleep(1500);
 }
 
+void find_textbox_dimensions(int x, int y, int* w, int* h){
+    *w = 0;
+    *h = 0;
+    for(int i=x+1;lines[y][i] != 'x';i++)
+        (*w)++;
+    for(int i=y+1;lines[i][x] != 'x';i++)
+        (*h)++;
+}
+
 void remove_label(int x, int y, int len){
     for(int i=0;i<len;i++)
         lines[y][x+i] = ' ';
@@ -181,7 +207,7 @@ void remove_textbox(int x, int y, int w, int h){
 
 int check_inputs(int x, int y, int xx, int yy, int len, int w, int h, int mode){
     if(mode == 1) {
-        if ((xx > 0) && (yy > 1) && ((xx + len + w + 2) < x) && ((yy + h + 1) < y))
+        if ((xx > 0) && (yy > 0) && ((xx + len + w + 2) < x) && ((yy + h + 1) < y))
             return 0;
     }else{
         if ((xx > 0) && (yy > 0) && ((xx + len) < x) && (yy < y))

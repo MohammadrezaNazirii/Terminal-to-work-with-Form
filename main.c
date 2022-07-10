@@ -31,10 +31,10 @@ int main() {
                             if (!exist_file(name))
                                 break;
                             else {
-                                printf("You have a form with this name!\nDo you want to rewrite it?\nType 1 if you want to rewrite it or type any character to enter new name\n");
+                                printf("You have a form with this name!\nDo you want to rewrite it?\nType 'y' if you want to rewrite it or type any character to enter new name\n");
                                 c = getchar();
                                 emptyBuffer();
-                                if (c == '1')
+                                if (c == 'y')
                                     break;
                             }
                         }
@@ -93,8 +93,10 @@ int main() {
                             else
                                 write_error();
                         }else if(c == '3'){
-                            printf("Please enter 4 numbers separated by spaces; First & Second, for x and y (start of TextBox you want to remove) and Third & Fourth, for width and height of TextBox: ");
-                            scanf("%d %d %d %d", &xx, &yy, &width, &height);
+                            printf("Please enter 2 numbers separated by spaces; For x and y (start of TextBox you want to remove) : ");
+                            scanf("%d %d", &xx, &yy);
+                            emptyBuffer();
+                            find_textbox_dimensions(xx, yy, &width, &height);
                             if(check_inputs(x, y, xx, yy, 0, width, height, 1)){
                                 out_of_range_input();
                                 continue;
@@ -103,6 +105,7 @@ int main() {
                         }else if(c == '4'){
                             printf("Please enter 3 numbers separated by spaces; First and Second, for x and y (start of Label you want to remove) and Third, for length of Label: ");
                             scanf("%d %d %d", &xx, &yy, &len);
+                            emptyBuffer();
                             if(check_inputs(x, y, xx, yy, len, 0, 0, 0)){
                                 out_of_range_input();
                                 continue;
