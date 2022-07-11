@@ -151,7 +151,6 @@ int main() {
             int i=0;
             while (1){
                 if(labels[i].have_textbox){
-//                    emptyBuffer();
                     system("cls");
                     print_lines(y, name_for_print);
                     print_buttons();
@@ -198,8 +197,89 @@ int main() {
                         emptyBuffer();
                     } else if (c == '3') {
                         emptyBuffer();
+                        system("cls");
+                        print_Edit();
+                        printf("Enter the name of completed form that you want to edit... ");
+                        char completed_name[20] = "./";
+                        make_completed_name(completed_name, name_for_print);
+                        if(exist_file(completed_name)){
+                            read_file(completed_name, &x, &y, 1);
+                        } else {
+                            print_fileNotFound_error();
+                            continue;
+                        }
+                        while(1){
+                            if(labels[i].have_textbox){
+                                system("cls");
+                                print_lines(y, completed_name);
+                                print_Edit();
+                                printf("'-':previous  '+':next  '1'to'2':buttons  string:Fill TextBox  '0':back\n");
+                                printf("Label: %s\n", labels[i].str);
+                                c = getchar();
+                                if (c == '-') {
+                                    emptyBuffer();
+                                    flag_pos = 0;
+                                    flag_neg = 1;
+                                    i--;
+                                    if (i == -1)
+                                        i = nLabels - 1;
+                                } else if (c == '+') {
+                                    emptyBuffer();
+                                    flag_pos = 1;
+                                    flag_neg = 0;
+                                    i++;
+                                    if (i == nLabels)
+                                        i = 0;
+                                } else if (c == '0') {
+                                    emptyBuffer();
+                                    system("cls");
+                                    break;
+                                } else if (c == '2'){
+                                    emptyBuffer();
+                                    save_file(completed_name, x, y, 0);
+                                    break;
+                                } else if (c != ' ') {//matne TextBox ro migire.
+                                    textbox_str[0] = '\0';
+                                    gets(temp);
+                                    strncat(textbox_str, &c, 1);
+                                    strcat(textbox_str, temp);
+                                    find_start_of_textbox(&labels[i], &xx, &yy);
+                                    find_textbox_dimensions(xx, yy, &width, &height);
+                                    if(strlen(textbox_str) > width*height){
+                                        printf("Your text is too large for this TextBox.");
+                                        Sleep(1500);
+                                    }else{
+                                        strcpy(labels[i].str_textbox, textbox_str);
+                                        fill_textbox(xx, yy, width, height, textbox_str);
+                                    }
+                                }
+                            }else{
+                                if(flag_pos) {
+                                    i++;
+                                    if (i == nLabels)
+                                        i = 0;
+                                }
+                                if(flag_neg){
+                                    i--;
+                                    if (i == -1)
+                                        i = nLabels-1;
+                                }
+                            }
+                        }
                     } else if (c == '4') {
                         emptyBuffer();
+                        system("cls");
+                        print_Remove();
+                        printf("Enter the name of completed form that you want to remove... ");
+                        char completed_name[20] = "./";
+                        make_completed_name(completed_name, name_for_print);
+                        if(exist_file(completed_name)){
+                            read_file(completed_name, &x, &y, 1);
+                        } else {
+                            print_fileNotFound_error();
+                            continue;
+                        }
+                        remove(completed_name);
                     } else if (c != ' ') {//matne TextBox ro migire.
                         textbox_str[0] = '\0';
                         gets(temp);

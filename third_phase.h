@@ -22,15 +22,12 @@ void print_Find(){
 }
 
 void print_Edit(){
-    // age az taraf menu biad inja bayad esm beporse  ->  in bayad ye ja dige handle beshe.
-    // age az find biad dige nabayad esm beporse
     printf("%s  %s\n", used, unused);
     printf("|1.Edit  |  |2.OK    |\n");
     printf("%s  %s\n", used, unused);
 }
 
 void print_Remove(){
-    // faghat az taraf menu miad inja ke bayad esm beporse  ->  in bayad ye ja dige handle beshe.
     printf("%s\n", used);
     printf("|1.Remove|\n");
     printf("%s\n", used);
@@ -47,9 +44,10 @@ void fill_textbox(int xx, int yy, int w, int h, const char str[]){
     int n=0;
     for(int i=yy+1;i<yy+h+1;i++){
         for(int j=xx+1;j<xx+w+1;j++){
-            if(str[n] == '\0')
-                return;
-            lines[i][j] = str[n++];
+            if(str[n] != '\0')
+                lines[i][j] = str[n++];
+            else
+                lines[i][j] = '~';
         }
     }
 }
@@ -58,8 +56,7 @@ void make_completed_name(char* completed_name, const char* name){
     strcat(completed_name, name);
     strcat(completed_name, "/");
     char temp[100];
-    scanf("%s", temp);
-    emptyBuffer();
+    gets(temp);
     strcat(completed_name, temp);
     strcat(completed_name, ".txt");
 }
