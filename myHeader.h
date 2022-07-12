@@ -72,11 +72,10 @@ char* create_line(int x, int mode){
 
 void initialize_lines(int x, int y){
     for(int i=0;i<y;i++){
-        if (i == 0 || i == y-1){
+        if (i == 0 || i == y-1)
             strcpy(lines[i], create_line(x, 0));
-        }else{
+        else
             strcpy(lines[i], create_line(x, 1));
-        }
     }
 }
 
@@ -271,6 +270,6 @@ void print_labelNotFound_error(){
 
 void remove_label_from_struct(int index){
     nLabels--;
-    for(int i=index;i<nLabels-1;i++)
+    for(int i=index;i<nLabels;i++)
         labels[i] = labels[i+1];
 }

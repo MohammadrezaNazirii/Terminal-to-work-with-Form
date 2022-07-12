@@ -78,6 +78,11 @@ int main() {
                         int xx, yy, width, height, len;
                         if(c == '1'){
                             get_data_from_user(1, &xx, &yy, &width, &height, label);
+                            if(find_label(label) != -1){
+                                printf("This label has already been selected.\nTry again.");
+                                Sleep(1500);
+                                continue;
+                            }
                             len = strlen(label);
                             if(check_inputs(x, y, xx, yy, len, width, height, 1)){
                                 out_of_range_input();
@@ -86,11 +91,15 @@ int main() {
                             if(check_validity(xx, yy, width, height, len, 1)) {
                                 labels[nLabels++].have_textbox = 1;
                                 print_textbox(xx, yy, width, height, label);
-                            }
-                            else
+                            }else
                                 write_error();
                         }else if(c == '2'){
                             get_data_from_user(0, &xx, &yy, &width, &height, label);
+                            if(find_label(label) != -1){
+                                printf("This label has already been selected.\nTry again.");
+                                Sleep(1500);
+                                continue;
+                            }
                             len = strlen(label);
                             if(check_inputs(x, y, xx, yy, len, 0, 0, 0)){
                                 out_of_range_input();
@@ -99,8 +108,7 @@ int main() {
                             if(check_validity(xx, yy, width, height, len, 0)) {
                                 labels[nLabels++].have_textbox = 0;
                                 print_label(xx, yy, label);
-                            }
-                            else
+                            }else
                                 write_error();
                         }else if(c == '3'){
                             print_removeLabel_menu(selected_label);
@@ -149,8 +157,23 @@ int main() {
                     print_fileNotFound_error();
             }
             read_file(name, &x, &y, 1);
+            int flag_have_textbox = 0;
+            for(int j=0;j<nLabels;j++){
+                if(labels[j].have_textbox)
+                    flag_have_textbox = 1;
+                break;
+            }
             int i=0;
             while (1){
+                if(flag_have_textbox == 0){
+                    system("cls");
+                    print_lines(y, name_for_print);
+                    printf("This form doesn't have any TextBoxes.\n");
+                    nLabels = 0;
+                    Sleep(2000);
+                    system("cls");
+                    break;
+                }
                 if(labels[i].have_textbox){
                     system("cls");
                     print_lines(y, name_for_print);
@@ -207,6 +230,11 @@ int main() {
                             check_validity_completed_forms(name_for_print, &x, &y);
                             printf("%d Forms found!", nValidCompletedForms);
                             Sleep(1500);
+                            if(nValidCompletedForms == 0){
+                                system("cls");
+                                nLabels = 0;
+                                break;
+                            }
                             int j=0;
                             while (1){
                                 system("cls");
@@ -235,6 +263,7 @@ int main() {
                                     printf("You are now in the Find mode.");
                                     Sleep(1000);
                                 } else if (c == '2'){//Edit
+                                    i = 0;
                                     emptyBuffer();
                                     while(1){
                                         if(labels[i].have_textbox){
@@ -326,6 +355,7 @@ int main() {
                             print_fileNotFound_error();
                             continue;
                         }
+                        i = 0;
                         while(1){
                             if(labels[i].have_textbox){
                                 system("cls");
