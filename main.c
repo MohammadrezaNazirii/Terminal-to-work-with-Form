@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <dirent.h>
 #include "myHeader.h"
 #include "third_phase.h"
 
@@ -132,7 +133,7 @@ int main() {
             }
         }
         else if(c == '2'){
-            int x, y, xx, yy, width, height, flag_pos, flag_neg;
+            int x, y, xx, yy, width, height, flag_pos, flag_neg, flag_break=0;
             char name[100], name_for_print[100], textbox_str[100], temp[100];
             textbox_str[0] = '\0';
             while(1){
@@ -194,12 +195,22 @@ int main() {
                                 save_file(completed_name, x, y, 0);
                         }
                     } else if (c == '2') {
+                        preMenu_find();
+                        c = getchar();
                         emptyBuffer();
+                        if(c == 'y'){
+                            nSelectedLabels = 0;
+                            nCompletedForms = 0;
+                            fill_selected_labels();
+                            get_completed_form_names(name_for_print);
+                            for(int k=0;k<nSelectedLabels;k++)
+                                printf("%s %s\n", selected_labels[k].str, selected_labels[k].str_textbox);
+                            for(int k=0;k<nCompletedForms;k++)
+                                printf("%s\n", completed_forms[k]);
+                            Sleep(1500);
+                        }
                     } else if (c == '3') {
-                        emptyBuffer();
-                        system("cls");
-                        print_Edit();
-                        printf("Enter the name of completed form that you want to edit... ");
+                        preMenu_edit();
                         char completed_name[20] = "./";
                         make_completed_name(completed_name, name_for_print);
                         if(exist_file(completed_name)){
@@ -237,6 +248,7 @@ int main() {
                                 } else if (c == '2'){
                                     emptyBuffer();
                                     save_file(completed_name, x, y, 0);
+                                    flag_break = 1;
                                     break;
                                 } else if (c != ' ') {//matne TextBox ro migire.
                                     textbox_str[0] = '\0';
@@ -267,10 +279,7 @@ int main() {
                             }
                         }
                     } else if (c == '4') {
-                        emptyBuffer();
-                        system("cls");
-                        print_Remove();
-                        printf("Enter the name of completed form that you want to remove... ");
+                        preMenu_remove();
                         char completed_name[20] = "./";
                         make_completed_name(completed_name, name_for_print);
                         if(exist_file(completed_name)){
@@ -279,7 +288,17 @@ int main() {
                             print_fileNotFound_error();
                             continue;
                         }
-                        remove(completed_name);
+                        system("cls");
+                        print_lines(y, completed_name);
+                        print_Remove();
+                        printf("Do you want to remove this form?\nIf YES, type 'y' or type any character to back to previous menu.\n");
+                        c = getchar();
+                        emptyBuffer();
+                        if(c == 'y'){
+                            remove(completed_name);
+                            printf("Form removed successfully.\n");
+                            Sleep(1000);
+                        }
                     } else if (c != ' ') {//matne TextBox ro migire.
                         textbox_str[0] = '\0';
                         gets(temp);
@@ -309,6 +328,10 @@ int main() {
                         if (i == -1)
                             i = nLabels-1;
                     }
+                }
+                if(flag_break){
+                    system("cls");
+                    break;
                 }
             }
         }

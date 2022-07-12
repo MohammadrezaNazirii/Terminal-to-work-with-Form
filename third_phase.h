@@ -1,10 +1,16 @@
 char unused[] = "x--------x";
 char used[] = "x========x";
 
+label selected_labels[100];
+int nSelectedLabels=0;
+
+char completed_forms[100][100];
+int nCompletedForms = 0;
+
 void print_buttons(){
-    printf("%s  %s  %s  %s\n", unused, unused, unused, unused);//, unused
-    printf("|1.ADD   |  |2.Find  |  |3.Edit  |  |4.Remove|\n");//  |5.OK    |
-    printf("%s  %s  %s  %s\n", unused, unused, unused, unused);//, unused
+    printf("%s  %s  %s  %s\n", unused, unused, unused, unused);
+    printf("|1.ADD   |  |2.Find  |  |3.Edit  |  |4.Remove|\n");
+    printf("%s  %s  %s  %s\n", unused, unused, unused, unused);
 }
 
 void print_ADD(){
@@ -59,4 +65,49 @@ void make_completed_name(char* completed_name, const char* name){
     gets(temp);
     strcat(completed_name, temp);
     strcat(completed_name, ".txt");
+}
+
+void preMenu_find(){
+    emptyBuffer();
+    system("cls");
+    printf("You should complete TextBoxes in last menu that you want to search in completed forms.\n");
+    printf("If you didn't complete TextBoxes in last menu, go back and fill them.\n");
+    printf("Do you want to continue?(y/n) ");
+}
+
+void preMenu_edit(){
+    emptyBuffer();
+    system("cls");
+    print_Edit();
+    printf("Enter the name of completed form that you want to edit... ");
+}
+
+void preMenu_remove(){
+    emptyBuffer();
+    system("cls");
+    print_Remove();
+    printf("Enter the name of completed form that you want to remove... ");
+}
+
+void fill_selected_labels(){
+    for(int i=0;i<nLabels;i++)
+        if(strcmp(labels[i].str_textbox, "."))
+            selected_labels[nSelectedLabels++] = labels[i];
+}
+
+void get_completed_form_names(char* name){
+    char path[100] = "./";
+    strcat(path, name);
+    int n=0;
+    DIR *d;
+    struct dirent *dir;
+    d = opendir(path);
+    if (d) {
+        while ((dir = readdir(d)) != NULL) {
+            if(n>1)
+                strcpy(completed_forms[nCompletedForms++], dir->d_name);
+            n++;
+        }
+        closedir(d);
+    }
 }
