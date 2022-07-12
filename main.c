@@ -201,17 +201,124 @@ int main() {
                         if(c == 'y'){
                             nSelectedLabels = 0;
                             nCompletedForms = 0;
+                            nValidCompletedForms = 0;
                             fill_selected_labels();
                             get_completed_form_names(name_for_print);
-                            for(int k=0;k<nSelectedLabels;k++)
-                                printf("%s %s\n", selected_labels[k].str, selected_labels[k].str_textbox);
-                            for(int k=0;k<nCompletedForms;k++)
-                                printf("%s\n", completed_forms[k]);
+                            check_validity_completed_forms(name_for_print, &x, &y);
+                            printf("%d Forms found!", nValidCompletedForms);
                             Sleep(1500);
+                            int j=0;
+                            while (1){
+                                system("cls");
+                                read_file(valid_completed_forms[j], &x, &y, 1);
+                                print_lines(y, valid_completed_forms[j]);
+                                print_Find();
+                                printf("'-':previous  '+':next  '1'to'3':buttons  '0':Exit\n");
+                                c = getchar();
+                                if (c == '-') {
+                                    emptyBuffer();
+                                    j--;
+                                    if (j == -1)
+                                        j = nValidCompletedForms - 1;
+                                } else if (c == '+') {
+                                    emptyBuffer();
+                                    j++;
+                                    if (j == nValidCompletedForms)
+                                        j = 0;
+                                } else if (c == '0') {
+                                    emptyBuffer();
+                                    system("cls");
+                                    flag_break = 1;
+                                    break;
+                                } else if (c == '1'){
+                                    emptyBuffer();
+                                    printf("You are now in the Find mode.");
+                                    Sleep(1000);
+                                } else if (c == '2'){//Edit
+                                    emptyBuffer();
+                                    while(1){
+                                        if(labels[i].have_textbox){
+                                            system("cls");
+                                            print_lines(y, valid_completed_forms[j]);
+                                            print_Edit();
+                                            printf("'-':previous  '+':next  '1'to'2':buttons  string:Fill TextBox  '0':back\n");
+                                            printf("Label: %s\n", labels[i].str);
+                                            c = getchar();
+                                            if (c == '-') {
+                                                emptyBuffer();
+                                                flag_pos = 0;
+                                                flag_neg = 1;
+                                                i--;
+                                                if (i == -1)
+                                                    i = nLabels - 1;
+                                            } else if (c == '+') {
+                                                emptyBuffer();
+                                                flag_pos = 1;
+                                                flag_neg = 0;
+                                                i++;
+                                                if (i == nLabels)
+                                                    i = 0;
+                                            } else if (c == '0') {
+                                                emptyBuffer();
+                                                break;
+                                            } else if (c == '1'){
+                                                emptyBuffer();
+                                                printf("You are now in the Edit mode.");
+                                                Sleep(1000);
+                                            } else if (c == '2'){
+                                                emptyBuffer();
+                                                save_file(valid_completed_forms[j], x, y, 0);
+                                                printf("Form edited successfully.\n");
+                                                Sleep(1500);
+                                                break;
+                                            } else if (c != ' ') {//matne TextBox ro migire.
+                                                textbox_str[0] = '\0';
+                                                gets(temp);
+                                                strncat(textbox_str, &c, 1);
+                                                strcat(textbox_str, temp);
+                                                find_start_of_textbox(&labels[i], &xx, &yy);
+                                                find_textbox_dimensions(xx, yy, &width, &height);
+                                                if(strlen(textbox_str) > width*height){
+                                                    printf("Your text is too large for this TextBox.");
+                                                    Sleep(1500);
+                                                }else{
+                                                    strcpy(labels[i].str_textbox, textbox_str);
+                                                    fill_textbox(xx, yy, width, height, textbox_str);
+                                                }
+                                            }
+                                        }else{
+                                            if(flag_pos) {
+                                                i++;
+                                                if (i == nLabels)
+                                                    i = 0;
+                                            }
+                                            if(flag_neg){
+                                                i--;
+                                                if (i == -1)
+                                                    i = nLabels-1;
+                                            }
+                                        }
+                                    }
+                                } else if (c == '3'){//Remove
+                                    emptyBuffer();
+                                    system("cls");
+                                    print_lines(y, valid_completed_forms[j]);
+                                    print_Remove();
+                                    printf("Do you want to remove this form?\nIf YES, type 'y' or type any character to back to previous menu.\n");
+                                    c = getchar();
+                                    emptyBuffer();
+                                    if(c == 'y'){
+                                        remove(valid_completed_forms[j]);
+                                        printf("Form removed successfully.\n");
+                                        manage_deleted_form(j);
+                                        Sleep(1500);
+                                    }
+                                }
+                            }
                         }
                     } else if (c == '3') {
                         preMenu_edit();
-                        char completed_name[20] = "./";
+                        char completed_name[100] = "./";
                         make_completed_name(completed_name, name_for_print);
                         if(exist_file(completed_name)){
                             read_file(completed_name, &x, &y, 1);
@@ -244,7 +351,12 @@ int main() {
                                 } else if (c == '0') {
                                     emptyBuffer();
                                     system("cls");
+                                    flag_break = 1;
                                     break;
+                                } else if (c == '1'){
+                                    emptyBuffer();
+                                    printf("You are now in the Edit mode.");
+                                    Sleep(1000);
                                 } else if (c == '2'){
                                     emptyBuffer();
                                     save_file(completed_name, x, y, 0);

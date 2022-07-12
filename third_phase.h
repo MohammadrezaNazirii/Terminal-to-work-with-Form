@@ -7,6 +7,9 @@ int nSelectedLabels=0;
 char completed_forms[100][100];
 int nCompletedForms = 0;
 
+char valid_completed_forms[100][100];
+int nValidCompletedForms = 0;
+
 void print_buttons(){
     printf("%s  %s  %s  %s\n", unused, unused, unused, unused);
     printf("|1.ADD   |  |2.Find  |  |3.Edit  |  |4.Remove|\n");
@@ -110,4 +113,31 @@ void get_completed_form_names(char* name){
         }
         closedir(d);
     }
+}
+
+void check_validity_completed_forms(char* folder_name, int* x, int* y){
+    for(int i=0;i<nCompletedForms;i++){
+        char name[100] = "./";
+        int valids=0;
+        strcat(name, folder_name);
+        strcat(name, "/");
+        strcat(name, completed_forms[i]);
+        read_file(name, x, y, 1);
+        for(int j=0;j<nSelectedLabels;j++){
+            for(int k=0;k<nLabels;k++){
+                if(!strcmp(labels[k].str, selected_labels[j].str)){
+                    if(!strcmp(labels[k].str_textbox, selected_labels[j].str_textbox)){
+                        valids++;
+                    }
+                }
+            }
+        }
+        if(valids == nSelectedLabels)
+            strcpy(valid_completed_forms[nValidCompletedForms++], name);
+    }
+}
+
+void manage_deleted_form(int a){
+    strcpy(valid_completed_forms[a], valid_completed_forms[nValidCompletedForms-1]);
+    nValidCompletedForms--;
 }
