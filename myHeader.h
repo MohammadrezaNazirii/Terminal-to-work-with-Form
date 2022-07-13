@@ -130,7 +130,7 @@ void print_lines(int y, char* name){
 }
 
 void print_designNew_menu(){
-    printf("1.Create TextBox(each TextBox should have Label)        2.Create Label        3.Remove Label        4.Back/Exit\n");
+    printf("1.Create TextBox(each TextBox should have a Label)        2.Create Label        3.Remove Label        4.Back/Exit\n");
     printf("What do you want to do? ");
 }
 

@@ -44,9 +44,7 @@ void print_Remove(){
 
 void print_menu(){
     printf("You can select a button for an action,\n");
-    printf("or enter '-', for previous and '+', for next component,\n");
-    printf("or you can enter 0 in every steps for back to previous step.\n");
-    printf("Note: When you are on a component, if enter something, it will go to its TextBox.\n");
+    printf("Note: While a Label is selected, anything you type will enter its respective TextBox.\n");
 }
 
 void fill_textbox(int xx, int yy, int w, int h, const char str[]){

@@ -42,7 +42,7 @@ int main() {
                                     break;
                             }
                         }
-                        printf("Please enter dimensions of form separated by space(First number for width and Second number for height)... ");
+                        printf("Please enter 2 numbers seperated by space to determine the dimensions of your form\nNote:First number is for width and Second number is for height.\n");
                         scanf("%d %d", &x, &y);
                         emptyBuffer();
                         allocate_lines(x, y);
